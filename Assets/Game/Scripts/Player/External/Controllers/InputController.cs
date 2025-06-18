@@ -1,45 +1,48 @@
-﻿using JuicyDI;
+﻿using System;
+using JuicyDI;
 using JuicyDI.Attributes;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-namespace Game.Scripts.Player.External.Controllers
+namespace Game.Scripts.InputController
 {
-    [SequenceParticipant(100)]
-    public class InputController : MonoBehaviour , ISequence
+    [JDIMonoController]
+    [SequenceParticipant(50)]
+    public class InputController : MonoBehaviour, ISequence, IUpdateSequence, IInputActions
     {
-        public InputActionAsset inputActions;
-        private InputAction _moveAction;
-        private InputAction _lookAction;
-        private InputAction _jumpAction;
-        
+        private Action m_PressingButtonF;
+        private Action m_PressingButtonE;
+
         public void MethodInit()
         {
-            // _moveAction = inputActions.FindAction("Move");
-            // _lookAction = inputActions.FindAction("Look");
-            // _jumpAction = inputActions.FindAction("Jump");
-            //
-            // _moveAction.performed += OnMove;
-            // _lookAction.performed += OnLook;
-            // _jumpAction.performed += OnJump;
-            //
-            // _moveAction.Enable();
-            // _lookAction.Enable();
-            // _jumpAction.Enable();
+
         }
 
         public void MethodStart()
         {
             
         }
-        
-        private void OnDisable()
+
+        public void CustomUpdate()
         {
-            // _moveAction.performed -= OnMove;
-            // _lookAction.performed -= OnLook;
-            // _jumpAction.performed -= OnJump;
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                m_PressingButtonF?.Invoke();
+            }
+            
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                m_PressingButtonE?.Invoke();
+            }
+        }
+        
+        public void AddPressingButtonFAction(Action action)
+        {
+            m_PressingButtonF += action;
         }
 
+        public void AddPressingButtonEAction(Action action)
+        {
+            m_PressingButtonE += action;
+        }
     }
 }
