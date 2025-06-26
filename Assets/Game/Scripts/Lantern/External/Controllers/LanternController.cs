@@ -11,16 +11,19 @@ namespace Game.Scripts.Lantern
     {
         [Inject] private IInputActions m_InputActions;
         
-        [SerializeField] GameObject m_LanternObject;
+        [SerializeField] private LanternActivationController m_LanternLight;
+        [SerializeField] private LanternTimerViewController m_LanternTimerViewController;
 
         private ILanternPowerTimerServices m_LanternPowerTimerServices;
         private bool m_IsLanternActive;
+        private bool m_IsLanternFastModeActive;
         
         public void MethodInit()
         {
             m_InputActions.AddPressingButtonFAction(ActivationLantern);
-            m_IsLanternActive = m_LanternObject.activeSelf;
-            m_LanternPowerTimerServices = new LanternPowerTimerServices(DeactivateLantern);
+            m_InputActions.AddPressingMouseLeftButtonDownAction(ActivatingFastMode);
+            m_InputActions.AddPressingMouseLeftButtonUpAction(ActivatingFastMode);
+            m_LanternPowerTimerServices = new LanternPowerTimerServices(DeactivateLantern, m_LanternTimerViewController);
         }
 
         public void MethodStart()
@@ -32,7 +35,8 @@ namespace Game.Scripts.Lantern
         {
             if (m_IsLanternActive)
             {
-                Debug.Log(m_LanternPowerTimerServices.RemainingTime);
+                //Debug.Log(m_LanternPowerTimerServices.RemainingTime);
+                m_LanternPowerTimerServices.UpdateTimeView();
             }
         }
 
@@ -43,20 +47,42 @@ namespace Game.Scripts.Lantern
                 return;
             }
             
-            m_IsLanternActive = !m_IsLanternActive;
-            
-            m_LanternObject.SetActive(m_IsLanternActive);
-
             if (m_IsLanternActive)
             {
-                m_LanternPowerTimerServices.StartTimer(10, 4);
+                DeactivateLantern();
+            }
+            else
+            {
+                ActivateLantern();
             }
         }
 
+        private void ActivatingFastMode()
+        {
+            if (!m_IsLanternActive)
+            {
+                return;
+            }
+            
+            m_IsLanternFastModeActive = !m_IsLanternFastModeActive;
+            m_LanternLight.SetFastLantern(m_IsLanternFastModeActive);
+            m_LanternPowerTimerServices.SetFastTimer(m_IsLanternFastModeActive);
+        }
+        
+        private void ActivateLantern()
+        {
+            m_IsLanternActive = true;
+            m_IsLanternFastModeActive = false;
+            m_LanternLight.ActivateLantern();
+            m_LanternPowerTimerServices.StartTimer(10, 10);
+        }
+        
         private void DeactivateLantern()
         {
             m_IsLanternActive = false;
-            m_LanternObject.SetActive(m_IsLanternActive);
+            m_IsLanternFastModeActive = false;
+            m_LanternPowerTimerServices.StopTimer();
+            m_LanternLight.DeactivateLantern();
         }
 
         private bool CanActivateLantern()

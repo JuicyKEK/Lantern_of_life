@@ -3,17 +3,30 @@ using DG.Tweening;
 
 namespace Game.Scripts.Lantern
 {
-    public class LanternPowerTweeTimer : ILanternPowerTimer
+    public class LanternPowerTweenTimer : ILanternPowerTimer
     {
+        private float m_AccelerationCoefficient;
         private Tween m_CurrentTween;
 
-        public void StartTimer(float delayInSeconds, Action callback)
+        public void StartTimer(float delayInSeconds, Action callback, float accelerationCoefficient = 1)
         {
+            m_AccelerationCoefficient = accelerationCoefficient;
+            
             m_CurrentTween?.Kill();
             m_CurrentTween = DOVirtual.DelayedCall(delayInSeconds, () =>
             {
                 callback?.Invoke();
             });
+        }
+        
+        public void SetFastTimer(bool isFast)
+        {
+            if (m_CurrentTween == null)
+            {
+                return;
+            }
+            
+            m_CurrentTween.timeScale = isFast ? m_AccelerationCoefficient : 1f;
         }
 
         public void StopTimer()
