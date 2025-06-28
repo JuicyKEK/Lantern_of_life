@@ -35,7 +35,6 @@ namespace Game.Scripts.Lantern
         {
             if (m_IsLanternActive)
             {
-                //Debug.Log(m_LanternPowerTimerServices.RemainingTime);
                 m_LanternPowerTimerServices.UpdateTimeView();
             }
         }

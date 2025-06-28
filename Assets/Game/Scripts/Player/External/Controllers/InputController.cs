@@ -7,12 +7,14 @@ namespace Game.Scripts.InputController
 {
     [JDIMonoController]
     [SequenceParticipant(50)]
-    public class InputController : MonoBehaviour, ISequence, IUpdateSequence, IInputActions
+    public class InputController : MonoBehaviour, ISequence, IUpdateSequence, IInputActions, IInputSelectionActions
     {
         private Action m_PressingButtonF;
         private Action m_PressingButtonE;
         private Action m_PressingMouseLeftButtonDown;
         private Action m_PressingMouseLeftButtonUp;
+        private Action<float> m_ScrollMouse;
+        private Action<int> m_PressKeyboardNumbersDown;
 
         public void MethodInit()
         {
@@ -45,6 +47,13 @@ namespace Game.Scripts.InputController
             {
                 m_PressingMouseLeftButtonUp?.Invoke();
             }
+            
+            if (Input.GetAxis("Mouse ScrollWheel") != 0)
+            {
+                m_ScrollMouse?.Invoke(Input.GetAxis("Mouse ScrollWheel"));
+            }
+
+            IsPressKeyboardNumbers();
         }
         
         public void AddPressingButtonFAction(Action action)
@@ -65,6 +74,27 @@ namespace Game.Scripts.InputController
         public void AddPressingMouseLeftButtonUpAction(Action action)
         {
             m_PressingMouseLeftButtonUp += action;
+        }
+
+        public void AddScrollMouseAction(Action<float> action)
+        {
+            m_ScrollMouse += action;
+        }
+
+        public void AddPressKeyboardNumbersAction(Action<int> action)
+        {
+            m_PressKeyboardNumbersDown += action;
+        }
+
+        private void IsPressKeyboardNumbers()
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                if (Input.GetKeyDown(KeyCode.Alpha1 + i))
+                {
+                    m_PressKeyboardNumbersDown?.Invoke(i);
+                }
+            }
         }
     }
 }
