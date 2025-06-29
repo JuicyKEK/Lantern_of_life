@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Game.Scripts.Inventory.Runtime.Data;
 using Game.Scripts.Inventory.Runtime.Data.Interfaces;
+using UnityEngine;
 
 namespace Game.Scripts.Inventory.Controllers
 {
@@ -10,9 +11,14 @@ namespace Game.Scripts.Inventory.Controllers
         
         public void AddItemToInventory(IInventoryObject item)
         {
+            if (m_InventoryDataObjects.InventoryObjects == null)
+            {
+                m_InventoryDataObjects.InventoryObjects = new List<Queue<IInventoryObject>>();
+            }
+            
             for (int i = 0; i < m_InventoryDataObjects.InventoryObjects.Count; i++)
             {
-                if (m_InventoryDataObjects.InventoryObjects[i].Peek() == item)
+                if (m_InventoryDataObjects.InventoryObjects[i].Peek().ObjectKey == item.ObjectKey)
                 {
                     AddExistingItem(item, i);
                     return;
@@ -21,7 +27,7 @@ namespace Game.Scripts.Inventory.Controllers
 
             AddNewItem(item);
         }
-
+        
         public IInventoryData GetInventoryDataObjects()
         {
             return m_InventoryDataObjects;
@@ -50,6 +56,8 @@ namespace Game.Scripts.Inventory.Controllers
             {
                 m_InventoryDataObjects.InventoryObjects.RemoveAt(indexObject);
             }
+            
+            LogDataObjects();
         }
 
         private void AddNewItem(IInventoryObject item)
@@ -63,6 +71,19 @@ namespace Game.Scripts.Inventory.Controllers
         private void AddExistingItem(IInventoryObject item, int index)
         {
             m_InventoryDataObjects.InventoryObjects[index].Enqueue(item);
+        }
+        
+        
+        private void LogDataObjects()
+        {
+            for (int i = 0; i < m_InventoryDataObjects.InventoryObjects.Count; i++)
+            {
+                Debug.Log($"{m_InventoryDataObjects.InventoryObjects[i].Peek().ObjectKey} - {m_InventoryDataObjects.InventoryObjects[i].Count}");
+                foreach (var item in m_InventoryDataObjects.InventoryObjects[i])
+                {
+                    Debug.Log(item);
+                }
+            }
         }
     }
 }

@@ -48,9 +48,9 @@ namespace Game.Scripts.InputController
                 m_PressingMouseLeftButtonUp?.Invoke();
             }
             
-            if (Input.GetAxis("Mouse ScrollWheel") != 0)
+            if (Input.mouseScrollDelta.y != 0)
             {
-                m_ScrollMouse?.Invoke(Input.GetAxis("Mouse ScrollWheel"));
+                m_ScrollMouse?.Invoke(Input.mouseScrollDelta.y);
             }
 
             IsPressKeyboardNumbers();

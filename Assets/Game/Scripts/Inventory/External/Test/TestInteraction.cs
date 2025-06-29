@@ -13,7 +13,7 @@ namespace Game.Scripts.Inventory.External
         [SerializeField] private Sprite m_ObjectIcon;
         
         public string ObjectKey => m_ObjectName;
-        public Sprite ObjectIcon => null;
+        public Sprite ObjectIcon => m_ObjectIcon;
         
         public void Interact()
         {
