@@ -1,4 +1,5 @@
 using Game.Scripts.InputController;
+using Game.Scripts.Inventory.External.Controllers.Interfaces;
 using JuicyDI;
 using JuicyDI.Attributes;
 using UnityEngine;
@@ -10,7 +11,9 @@ namespace Game.Scripts.Lantern
     public class LanternController : MonoBehaviour, ISequence, IUpdateSequence
     {
         [Inject] private IInputActions m_InputActions;
+        [Inject] private IInventoryGetObject m_Inventory;
         
+        [SerializeField] private string m_ObjectLanternKey = "Charge";
         [SerializeField] private LanternActivationController m_LanternLight;
         [SerializeField] private LanternTimerViewController m_LanternTimerViewController;
 
@@ -21,6 +24,7 @@ namespace Game.Scripts.Lantern
         public void MethodInit()
         {
             m_InputActions.AddPressingButtonFAction(ActivationLantern);
+            m_InputActions.AddPressingButtonRAction(TryChangeCharge);
             m_InputActions.AddPressingMouseLeftButtonDownAction(ActivatingFastMode);
             m_InputActions.AddPressingMouseLeftButtonUpAction(ActivatingFastMode);
             m_LanternPowerTimerServices = new LanternPowerTimerServices(DeactivateLantern, m_LanternTimerViewController);
@@ -87,6 +91,25 @@ namespace Game.Scripts.Lantern
         private bool CanActivateLantern()
         {
             return true;
+        }
+
+        private void TryChangeCharge()
+        {
+            if (m_Inventory.GetInventorySelectedObject() != null)
+            {
+                Debug.Log(m_Inventory.GetInventorySelectedObject().ObjectKey.Contains(m_ObjectLanternKey));
+            }
+            
+            if (m_Inventory.GetInventorySelectedObject() != null && m_Inventory.GetInventorySelectedObject().ObjectKey.Contains(m_ObjectLanternKey))
+            {
+                m_Inventory.DeleteSelectedInventoryObject();
+                ChangeCharge();
+            }
+        }
+
+        private void ChangeCharge()
+        {
+            
         }
     }
 }

@@ -3,7 +3,7 @@
     public interface IInventoryGetObject
     {
         void SelectedInventoryObject(int selectedIndex);
-        IInventoryObject GetInventoryObject(int itemId);
-        void DeleteInventoryObject(int itemId);
+        IInventoryObject GetInventorySelectedObject();
+        void DeleteSelectedInventoryObject();
     }
 }

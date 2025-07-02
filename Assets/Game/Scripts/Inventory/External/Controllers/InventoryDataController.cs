@@ -57,7 +57,7 @@ namespace Game.Scripts.Inventory.Controllers
                 m_InventoryDataObjects.InventoryObjects.RemoveAt(indexObject);
             }
             
-            LogDataObjects();
+            //LogDataObjects();
         }
 
         private void AddNewItem(IInventoryObject item)

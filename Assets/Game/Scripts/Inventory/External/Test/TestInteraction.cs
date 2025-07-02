@@ -15,6 +15,11 @@ namespace Game.Scripts.Inventory.External
         public string ObjectKey => m_ObjectName;
         public Sprite ObjectIcon => m_ObjectIcon;
         
+        public void InventoryObjectAction()
+        {
+            Debug.Log("TestInteraction");
+        }
+
         public void Interact()
         {
             m_Inventory.AddItem(this);

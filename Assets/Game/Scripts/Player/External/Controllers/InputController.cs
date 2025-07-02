@@ -11,6 +11,7 @@ namespace Game.Scripts.InputController
     {
         private Action m_PressingButtonF;
         private Action m_PressingButtonE;
+        private Action m_PressingButtonR;
         private Action m_PressingMouseLeftButtonDown;
         private Action m_PressingMouseLeftButtonUp;
         private Action<float> m_ScrollMouse;
@@ -36,6 +37,11 @@ namespace Game.Scripts.InputController
             if (Input.GetKeyDown(KeyCode.E))
             {
                 m_PressingButtonE?.Invoke();
+            } 
+            
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                m_PressingButtonR?.Invoke();
             }
             
             if (Input.GetMouseButtonDown(0))
@@ -59,6 +65,11 @@ namespace Game.Scripts.InputController
         public void AddPressingButtonFAction(Action action)
         {
             m_PressingButtonF += action;
+        }
+
+        public void AddPressingButtonRAction(Action action)
+        {
+            m_PressingButtonR += action;
         }
 
         public void AddPressingButtonEAction(Action action)

@@ -56,9 +56,20 @@ namespace Game.Scripts.Inventory.Controllers
             return m_InventoryDataController.PeekInventoryObject(itemId);
         }
 
-        public void DeleteInventoryObject(int itemId)
+        public IInventoryObject GetInventorySelectedObject()
         {
-            m_InventoryDataController.DeleteInventoryObject(itemId);
+            if (m_InventoryDataController.GetInventoryDataObjects().InventoryObjects == null ||
+                m_InventoryDataController.GetInventoryDataObjects().InventoryObjects.Count == 0)
+            {
+                return null;
+            }
+            
+            return GetInventoryObject(m_CurrentSellectObject);
+        }
+
+        public void DeleteSelectedInventoryObject()
+        {
+            m_InventoryDataController.DeleteInventoryObject(m_CurrentSellectObject);
             
             if (m_InventoryDataController.GetInventoryDataObjects().InventoryObjects.Count > 0)
             {

@@ -6,5 +6,6 @@ namespace Game.Scripts.Inventory
     {
         string ObjectKey { get; }
         Sprite ObjectIcon { get; }
+        void InventoryObjectAction();
     }
 }
